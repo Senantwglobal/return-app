@@ -63,7 +63,7 @@ th.sortable{cursor:pointer;user-select:none}
 th.sortable:hover{color:var(--tx);background:var(--bg3)}
 th.sort-asc::after{content:' ↑';color:var(--b)}
 th.sort-desc::after{content:' ↓';color:var(--b)}
-td{padding:7px 9px;border-bottom:.5px solid var(--bd);vertical-align:middle}
+td{padding:8px 9px;border-bottom:.5px solid var(--bd);vertical-align:middle;height:38px}
 tr:last-child td{border-bottom:none}
 tr:hover td{background:var(--bg2)}
 /* DELETED ROW */
@@ -116,8 +116,7 @@ tr.deleted .badge{opacity:.5}
 .rate-val{font-weight:600;color:var(--tx2)}
 
 /* 제품명 말줄임 */
-.tn{max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default}
-.tn:hover{white-space:normal;word-break:break-all;max-width:none;background:var(--bg);position:relative;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.12);padding:2px 4px;border-radius:3px}
+.tn{max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
 /* 테이블 레이아웃 고정 */
 .tw table{width:100%}
 /* UPC 요약 모달 */
@@ -319,6 +318,7 @@ tr.deleted .badge{opacity:.5}
     <select id="ar-show" onchange="renderAR()"><option value="active">유효 항목</option><option value="deleted">삭제된 항목</option><option value="all">전체 보기</option></select>
     <button class="btn br bs" onclick="deleteSelectedAR()">선택 삭제</button>
     <button class="btn" onclick="exportAR()">엑셀 다운</button>
+    <button class="btn bs" onclick="resetAR()">초기화</button>
     <span class="mla" id="ar-sum" style="font-size:11px;color:var(--tx3)"></span>
   </div>
   <div class="tw"><table><thead><tr>
@@ -343,6 +343,7 @@ tr.deleted .badge{opacity:.5}
     <select id="n-ch" onchange="renderNormal()"><option value="">전체 채널</option><option>오플닷컴</option><option>네이버(올댓몰)</option><option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option><option>이베이(올댓몰)</option><option>사무실 재고 조사</option></select>
     <button class="btn bp" onclick="openUseModal()">사용 / 출고</button>
     <button class="btn" onclick="exportNormal()">엑셀 다운</button>
+    <button class="btn bs" onclick="resetNormal()">초기화</button>
     <span class="mla" id="n-sum" style="font-size:11px;color:var(--tx3)"></span>
   </div>
   <div class="tw"><table><thead><tr>
@@ -362,6 +363,7 @@ tr.deleted .badge{opacity:.5}
     <input id="d-s" placeholder="제품명 또는 UPC 검색..." oninput="renderDisposed()">
     <select id="d-ch" onchange="renderDisposed()"><option value="">전체 채널</option><option>오플닷컴</option><option>네이버(올댓몰)</option><option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option><option>이베이(올댓몰)</option><option>사무실 재고 조사</option></select>
     <button class="btn" onclick="exportDisposed()">엑셀 다운</button>
+    <button class="btn bs" onclick="resetDisposed()">초기화</button>
     <span class="mla" id="d-sum" style="font-size:11px;color:var(--tx3)"></span>
   </div>
   <div class="tw"><table><thead><tr>
@@ -391,6 +393,7 @@ tr.deleted .badge{opacity:.5}
     </select>
     <input id="h-s" placeholder="제품명 또는 UPC..." oninput="renderHistory()" style="max-width:180px">
     <button class="btn" onclick="exportHistory()">엑셀 다운</button>
+    <button class="btn bs" onclick="resetHistory()">초기화</button>
     <span class="mla" id="h-sum" style="font-size:11px;color:var(--tx3)"></span>
   </div>
   <div class="tw"><table><thead><tr>
@@ -409,6 +412,7 @@ tr.deleted .badge{opacity:.5}
     <input id="sum-s" placeholder="UPC 또는 제품명 검색..." oninput="renderSummary()">
     <select id="sum-brand" onchange="renderSummary()"><option value="">전체 브랜드</option></select>
     <select id="sum-f" onchange="renderSummary()"><option value="">전체</option><option value="hasStock">재고 있음</option><option value="noStock">재고 없음</option><option value="hasDisposed">폐기 있음</option></select>
+    <button class="btn bs" onclick="resetSummary()">초기화</button>
     <span class="mla" id="sum-cnt" style="font-size:11px;color:var(--tx3)"></span>
   </div>
   <div class="tw"><table><thead><tr>
@@ -516,7 +520,12 @@ tr.deleted .badge{opacity:.5}
 <div class="mo" onclick="if(event.target===this)closeUse()">
   <div class="md">
     <div class="mdt">재고 사용 / 출고 등록</div>
-    <div class="fi mb8"><label>UPC 또는 제품명 검색</label><input id="use-q" placeholder="검색어 입력..." oninput="filterUseList()"></div>
+    <div class="fi mb8"><label>UPC 또는 제품명 검색</label>
+      <div style="display:flex;gap:6px">
+        <input id="use-q" placeholder="검색어 입력..." oninput="filterUseList()" style="flex:1">
+        <button class="btn bs" onclick="document.getElementById('use-q').value='';filterUseList()">초기화</button>
+      </div>
+    </div>
     <div class="fi mb12"><label>제품 선택</label>
       <select id="use-sel" size="5" style="height:auto;min-height:90px" onchange="onUseSel()"></select></div>
     <div id="use-info" class="ib mb8">제품을 선택하세요</div>
@@ -934,180 +943,7 @@ function renderAR(){
       '<td style="font-size:10px">'+(r.cat||'—')+'</td>'+
       '<td>'+fmtDateDisp(r.expiry)+'</td>'+
       '<td style="font-size:10px;color:var(--tx2)">'+(r.brand||'—')+'</td>'+
-      '<td><div class="tn" title="'+(r.name||'')+'">'+(r.name||'—')+'</div></td>'+
-      '<td style="font-size:10px;color:var(--tx3)">'+(r.upc||'—')+'</td>'+
-      '</tr>';
-  }).join(''):'<tr><td colspan="12" class="empty">데이터 없음</td></tr>';
-}
-function toggleAllAR(checked){document.querySelectorAll('.ar-cb').forEach(function(cb){cb.checked=checked;});}
-function deleteSelectedAR(){
-  var ids=[];
-  document.querySelectorAll('.ar-cb:checked').forEach(function(cb){ids.push(parseInt(cb.dataset.id));});
-  if(!ids.length){toast('삭제할 항목을 선택하세요.',true);return;}
-  if(!confirm(ids.length+'건을 삭제 처리합니다.\n삭제된 항목은 취소선으로 표시되며 이력은 유지됩니다.'))return;
-  ids.forEach(function(id){
-    var r=REC.find(function(x){return x.id===id;});
-    if(r){r.deleted=true;r.remaining=0;}
-  });
-  save();
-  var allCb=document.getElementById('ar-all');if(allCb)allCb.checked=false;
-  renderAR();renderDash();renderNormal();renderSummary();
-  toast(ids.length+'건 삭제 처리 완료');
-}
-
-// ── NORMAL ────────────────────────────────────────────────────────────
-function renderNormal(){
-  var q=(document.getElementById('n-s')||{value:''}).value.toLowerCase();
-  var ch=(document.getElementById('n-ch')||{value:''}).value;
-  var rows=REC.filter(function(r){return!r.deleted&&r.status==='정상'&&r.remaining>0&&(!q||r.name.toLowerCase().indexOf(q)>=0||(r.upc||'').indexOf(q)>=0)&&(!ch||r.channel===ch);});
-  var sorted=applySort(rows,'normal');
-  var tot=sorted.reduce(function(s,r){return s+r.remaining*(r.price||0);},0);
-  document.getElementById('n-sum').innerHTML=sorted.length+'건  |  $'+tot.toFixed(2)+(FX.loaded?'<span class="krw" style="display:inline;margin-left:4px">('+krwStr(tot)+')</span>':'');
-  var today=new Date();
-  var tbl=document.getElementById('normal-body').closest('table');
-  updateSortHeaders('normal',tbl);
-  document.getElementById('normal-body').innerHTML=sorted.length?sorted.map(function(r){
-    var exp=fmtDateDisp(r.expiry);
-    if(r.expiry){var d=Math.round((new Date(r.expiry)-today)/86400000);exp=fmtDateDisp(r.expiry)+'<br><span class="'+(d<=30?'ed':'ew')+'">'+(d<=0?'만료됨':d+'일')+'</span>';}
-    return '<tr style="cursor:pointer" onclick="openDetail('+r.id+')"><td>'+fmtDateDisp(r.date)+'</td><td>'+chBadge(r.channel)+'</td><td>'+(r.brand||'—')+'</td><td>'+r.name+'</td>'+
-      '<td style="font-size:10px;color:var(--tx3)">'+(r.upc||'—')+'</td>'+
-      '<td><b>'+r.remaining+'</b>/'+r.qty+'</td><td>$'+(r.price||0).toFixed(2)+'</td>'+
-      '<td style="color:var(--g);font-weight:600">$'+(r.remaining*(r.price||0)).toFixed(2)+krwTag(r.remaining*(r.price||0))+'</td>'+
-      '<td>'+exp+'</td><td>'+(r.cat||'—')+'</td>'+
-      '<td onclick="event.stopPropagation()"><button class="btn bs" onclick="openUseFor('+r.id+')">사용</button></td></tr>';
-  }).join(''):'<tr><td colspan="11" class="empty">정상 재고 없음</td></tr>';
-}
-
-// ── DISPOSED ──────────────────────────────────────────────────────────
-function renderDisposed(){
-  var q=(document.getElementById('d-s')||{value:''}).value.toLowerCase();
-  var ch=(document.getElementById('d-ch')||{value:''}).value;
-  var rows=REC.filter(function(r){return!r.deleted&&r.status==='폐기'&&(!q||r.name.toLowerCase().indexOf(q)>=0||(r.upc||'').indexOf(q)>=0)&&(!ch||r.channel===ch);});
-  var sorted=applySort(rows,'disposed');
-  var tot=sorted.reduce(function(s,r){return s+r.qty*(r.price||0);},0);
-  document.getElementById('d-sum').innerHTML=sorted.length+'건  |  손실 $'+tot.toFixed(2)+(FX.loaded?'<span class="krw" style="display:inline;margin-left:4px">('+krwStr(tot)+')</span>':'');
-  var tbl=document.getElementById('disposed-body').closest('table');
-  updateSortHeaders('disposed',tbl);
-  document.getElementById('disposed-body').innerHTML=sorted.length?sorted.map(function(r){
-    return '<tr style="cursor:pointer" onclick="openDetail('+r.id+')"><td>'+fmtDateDisp(r.date)+'</td><td>'+chBadge(r.channel)+'</td><td>'+(r.brand||'—')+'</td><td>'+r.name+'</td>'+
-      '<td style="font-size:10px;color:var(--tx3)">'+(r.upc||'—')+'</td><td>'+r.qty+'</td>'+
-      '<td>$'+(r.price||0).toFixed(2)+'</td><td style="color:var(--r);font-weight:600">$'+(r.qty*(r.price||0)).toFixed(2)+krwTag(r.qty*(r.price||0))+'</td>'+
-      '<td>'+fmtDateDisp(r.expiry)+'</td><td>'+(r.cat||'—')+'</td></tr>';
-  }).join(''):'<tr><td colspan="10" class="empty">폐기 재고 없음</td></tr>';
-}
-
-// ── USE MODAL ─────────────────────────────────────────────────────────
-var _useList=[];
-function openUseModal(){
-  _useList=REC.filter(function(r){return!r.deleted&&r.status==='정상'&&r.remaining>0;});
-  document.getElementById('use-q').value='';
-  var _td=new Date().toISOString().slice(0,10);
-  document.getElementById('use-date').value=_td;
-  document.getElementById('use-date').min=_td;
-  document.getElementById('use-qty').value=1;
-  document.getElementById('use-price').textContent='—';
-  document.getElementById('use-cost').textContent='$0.00';
-  document.getElementById('use-info').textContent='제품을 선택하세요';
-  filterUseList();
-  document.getElementById('modal-use').style.display='block';
-}
-function openUseFor(id){openUseModal();var sel=document.getElementById('use-sel');for(var i=0;i<sel.options.length;i++){if(parseInt(sel.options[i].value)===id){sel.selectedIndex=i;break;}}onUseSel();}
-function filterUseList(){
-  var q=document.getElementById('use-q').value.toLowerCase();
-  var filtered=_useList.filter(function(r){return!q||r.upc.indexOf(q)>=0||r.name.toLowerCase().indexOf(q)>=0||(r.brand||'').toLowerCase().indexOf(q)>=0;});
-  var sel=document.getElementById('use-sel'),prev=sel.value;
-  sel.innerHTML='<option value="">— 선택 —</option>'+filtered.map(function(r){
-    return '<option value="'+r.id+'">[재고 '+r.remaining+'개] '+r.upc+' | '+(r.brand||'')+' '+r.name+' | '+(r.expiry?fmtDateDisp(r.expiry):'유통기한미등록')+'</option>';
-  }).join('');
-  if(prev)sel.value=prev;
-  onUseSel();
-}
-function closeUse(){document.getElementById('modal-use').style.display='none';}
-function onUseSel(){
-  var id=parseInt(document.getElementById('use-sel').value),r=REC.find(function(x){return x.id===id;});
-  if(r){
-    document.getElementById('use-info').innerHTML='<b>'+r.name+'</b><br>재고: <b>'+r.remaining+'개</b> &nbsp; 단가: $'+(r.price||0).toFixed(2)+' &nbsp; 유통기한: '+(r.expiry?fmtDateDisp(r.expiry):'미등록')+' &nbsp; '+r.channel;
-    document.getElementById('use-price').textContent='$'+(r.price||0).toFixed(2);
-    calcUseCost();
-  } else {
-    document.getElementById('use-info').textContent='제품을 선택하세요';
-    document.getElementById('use-price').textContent='—';
-    document.getElementById('use-cost').textContent='$0.00';
-  }
-}
-function calcUseCost(){
-  var id=parseInt(document.getElementById('use-sel').value),r=REC.find(function(x){return x.id===id;});
-  document.getElementById('use-cost').textContent=r?'$'+((r.price||0)*(parseInt(document.getElementById('use-qty').value)||0)).toFixed(2):'$0.00';
-}
-function recordUse(){
-  var id=parseInt(document.getElementById('use-sel').value),r=REC.find(function(x){return x.id===id;});
-  if(!r){toast('제품을 선택하세요.',true);return;}
-  var qty=parseInt(document.getElementById('use-qty').value)||1;
-  if(qty>r.remaining){toast('재고 초과 (최대 '+r.remaining+'개)',true);return;}
-  var type=document.getElementById('use-type').value,date=document.getElementById('use-date').value||new Date().toISOString().slice(0,10);
-  r.remaining-=qty;
-  if(r.remaining===0)r.status=type==='폐기'?'폐기':'소진';
-  HIST.push({date:date,type:type,upc:r.upc,brand:r.brand||'',name:r.name,qty:qty,price:r.price||0});
-  save();closeUse();renderNormal();renderDash();toast('사용 등록 완료!');
-}
-
-// ── HISTORY ───────────────────────────────────────────────────────────
-function renderHistory(){
-  var t=(document.getElementById('h-type')||{value:''}).value;
-  var q=(document.getElementById('h-s')||{value:''}).value.toLowerCase();
-  var rows=HIST.filter(function(h){return(!t||h.type===t)&&(!q||h.name.toLowerCase().indexOf(q)>=0||(h.upc||'').indexOf(q)>=0);});
-  var sorted=applySort(rows.map(function(h,i){return Object.assign({},h,{_i:i,cost:(h.qty||0)*(h.price||0)});}), 'hist');
-  var tot=sorted.reduce(function(s,h){return s+h.qty*(h.price||0);},0);
-  document.getElementById('h-sum').textContent=sorted.length+'건  |  $'+tot.toFixed(2);
-  var tbl=document.getElementById('hist-body').closest('table');
-  updateSortHeaders('hist',tbl);
-  document.getElementById('hist-body').innerHTML=sorted.length?sorted.map(function(h){
-    return '<tr><td>'+fmtDateDisp(h.date)+'</td><td>'+useBadge(h.type)+'</td>'+
-      '<td>'+(h.brand||'—')+'</td><td><div class="tn" title="'+(h.name||'')+'">'+( h.name||'—')+'</div></td>'+
-      '<td style="font-size:10px;color:var(--tx3)">'+(h.upc||'—')+'</td>'+
-      '<td style="font-size:10px;color:var(--tx2)">'+(h.expiry?fmtDateDisp(h.expiry):'—')+'</td>'+
-      '<td>'+h.qty+'개</td><td>$'+(h.price||0).toFixed(2)+'</td>'+
-      '<td style="font-weight:600">$'+((h.qty||0)*(h.price||0)).toFixed(2)+'</td></tr>';
-  }).join(''):'<tr><td colspan="8" class="empty">이력 없음</td></tr>';
-}
-
-// ── UPC SUMMARY ───────────────────────────────────────────────────────
-function renderSummary(){
-  var q=(document.getElementById('sum-s')||{value:''}).value.toLowerCase();
-  var bf=(document.getElementById('sum-brand')||{value:''}).value;
-  var ff=(document.getElementById('sum-f')||{value:''}).value;
-  var upcMap={};
-  REC.filter(function(r){return!r.deleted;}).forEach(function(r){
-    var k=r.upc||('__'+r.name);
-    if(!upcMap[k])upcMap[k]={upc:r.upc||'',brand:r.brand||'',name:r.name||'',price:r.price||0,expiry:r.expiry||'',totalIn:0,stock:0,disposed:0,used:0};
-    upcMap[k].totalIn+=r.qty||0;upcMap[k].stock+=r.remaining||0;
-    if(r.status==='폐기')upcMap[k].disposed+=r.qty||0;
-    if(r.price)upcMap[k].price=r.price;if(r.expiry)upcMap[k].expiry=r.expiry;
-    if(r.brand)upcMap[k].brand=r.brand;if(r.name)upcMap[k].name=r.name;
-  });
-  HIST.forEach(function(h){if(h.type==='폐기')return;var k=h.upc||('__'+h.name);if(upcMap[k])upcMap[k].used+=h.qty||0;});
-  var brands=[];
-  Object.values(upcMap).forEach(function(u){if(u.brand&&brands.indexOf(u.brand)<0)brands.push(u.brand);});
-  brands.sort();
-  var bsel=document.getElementById('sum-brand'),curB=bsel.value;
-  bsel.innerHTML='<option value="">전체 브랜드</option>'+brands.map(function(b){return'<option value="'+b+'"'+(b===curB?' selected':'')+'>'+b+'</option>';}).join('');
-  var rows=Object.values(upcMap).map(function(u){return Object.assign({},u,{stockAmt:u.stock*u.price,lossAmt:u.disposed*u.price});}).filter(function(u){
-    if(q&&u.upc.toLowerCase().indexOf(q)<0&&u.name.toLowerCase().indexOf(q)<0&&u.brand.toLowerCase().indexOf(q)<0)return false;
-    if(bf&&u.brand!==bf)return false;
-    if(ff==='hasStock'&&u.stock<=0)return false;
-    if(ff==='noStock'&&u.stock>0)return false;
-    if(ff==='hasDisposed'&&u.disposed<=0)return false;
-    return true;
-  });
-  var sorted=applySort(rows,'sum');
-  document.getElementById('sum-cnt').textContent=sorted.length+'개 UPC';
-  var tbl=document.getElementById('sum-body').closest('table');
-  updateSortHeaders('sum',tbl);
-  var today=new Date();
-  document.getElementById('sum-body').innerHTML=sorted.length?sorted.map(function(u){
-    var exp=u.expiry||'—';
-    if(u.expiry){var d=Math.round((new Date(u.expiry)-today)/86400000);exp='<span class="'+(d<=30?'ed':d<=180?'ew':'')+'">'+(fmtDateDisp(u.expiry))+(d<=0?' (만료)':d<=180?' ('+d+'일)':'')+'</span>';}
-    return '<tr><td style="font-size:10px;color:var(--tx3)">'+u.upc+'</td><td>'+u.brand+'</td><td><div class="tn" title="'+u.name+'" style="cursor:pointer;color:var(--b);text-decoration:underline" onclick="event.stopPropagation();openUPCDetail(\''+(u.upc||'')+'\')">'+(u.name||'—')+'</div></td>'+
+      '<td><div class="tn" title="'+u.name+'">'+( u.name||'—')+'</div></td>'+
       '<td style="text-align:center">'+u.totalIn+'</td>'+
       '<td style="text-align:center;font-weight:600;color:'+(u.stock>0?'var(--g)':'var(--tx3)')+'">'+u.stock+'</td>'+
       '<td style="text-align:center;color:'+(u.disposed>0?'var(--r)':'var(--tx3)')+'">'+u.disposed+'</td>'+
@@ -1638,6 +1474,39 @@ function rematchAll(){
   save();
   renderRecent(); renderNormal(); renderDisposed(); renderSummary(); renderDBStatus();
   toast('UPC 매칭 '+matched+'건 | 단가 '+priceUpd+'건 · 제품명 '+nameUpd+'건 업데이트');
+}
+
+
+// ── RESET FILTERS ─────────────────────────────────────────────────────
+function resetAR(){
+  document.getElementById('ar-s').value='';
+  document.getElementById('ar-ch').value='';
+  document.getElementById('ar-st').value='';
+  document.getElementById('ar-cat').value='';
+  document.getElementById('ar-show').value='active';
+  var cb=document.getElementById('ar-all'); if(cb) cb.checked=false;
+  renderAR();
+}
+function resetNormal(){
+  document.getElementById('n-s').value='';
+  document.getElementById('n-ch').value='';
+  renderNormal();
+}
+function resetDisposed(){
+  document.getElementById('d-s').value='';
+  document.getElementById('d-ch').value='';
+  renderDisposed();
+}
+function resetHistory(){
+  document.getElementById('h-type').value='';
+  document.getElementById('h-s').value='';
+  renderHistory();
+}
+function resetSummary(){
+  document.getElementById('sum-s').value='';
+  document.getElementById('sum-brand').value='';
+  document.getElementById('sum-f').value='';
+  renderSummary();
 }
 
 // ── DB STATUS ─────────────────────────────────────────────────────────
