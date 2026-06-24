@@ -116,10 +116,10 @@ tr.deleted .badge{opacity:.5}
 .rate-val{font-weight:600;color:var(--tx2)}
 
 /* 제품명 말줄임 */
-.tn{max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default}
+.tn{max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:default}
 .tn:hover{white-space:normal;word-break:break-all;max-width:none;background:var(--bg);position:relative;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.12);padding:2px 4px;border-radius:3px}
 /* 테이블 레이아웃 고정 */
-.tw table{table-layout:fixed;width:100%}
+.tw table{width:100%}
 /* UPC 요약 모달 */
 .upc-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:200;display:flex;align-items:center;justify-content:center}
 .upc-modal{background:var(--bg);border-radius:var(--radl);padding:22px;width:600px;max-width:96vw;max-height:88vh;overflow-y:auto;border:.5px solid var(--bd);box-shadow:0 8px 32px rgba(0,0,0,.1)}
@@ -293,12 +293,7 @@ tr.deleted .badge{opacity:.5}
     </div>
   </div>
   <div class="card"><div class="ct">최근 입고 내역</div>
-    <div class="tw"><table><colgroup>
-    <col style="width:92px"><col style="width:120px"><col style="width:82px">
-    <col style="width:210px"><col style="width:115px"><col style="width:48px">
-    <col style="width:70px"><col style="width:78px"><col style="width:92px">
-    <col style="width:92px"><col style="width:55px">
-  </colgroup><thead><tr>
+    <div class="tw"><table><thead><tr>
       <th class="sortable" onclick="sortTable('recent','date')">날짜</th>
       <th>판매처</th><th>브랜드</th><th>제품명</th><th>UPC</th>
       <th class="sortable" onclick="sortTable('recent','qty')">수량</th>
@@ -326,13 +321,7 @@ tr.deleted .badge{opacity:.5}
     <button class="btn" onclick="exportAR()">엑셀 다운</button>
     <span class="mla" id="ar-sum" style="font-size:11px;color:var(--tx3)"></span>
   </div>
-  <div class="tw"><table><colgroup>
-    <col style="width:30px"><col style="width:92px"><col style="width:120px">
-    <col style="width:48px"><col style="width:72px"><col style="width:78px">
-    <col style="width:54px"><col style="width:92px"><col style="width:92px">
-    <col style="width:82px"><col style="width:200px"><col style="width:115px">
-  </colgroup>
-  <thead><tr>
+  <div class="tw"><table><thead><tr>
     <th style="width:28px"><input type="checkbox" class="cb" id="ar-all" onchange="toggleAllAR(this.checked)"></th>
     <th class="sortable" onclick="sortTable('ar','date')">날짜</th>
     <th>판매처</th>
@@ -356,12 +345,7 @@ tr.deleted .badge{opacity:.5}
     <button class="btn" onclick="exportNormal()">엑셀 다운</button>
     <span class="mla" id="n-sum" style="font-size:11px;color:var(--tx3)"></span>
   </div>
-  <div class="tw"><table><colgroup>
-    <col style="width:92px"><col style="width:120px"><col style="width:82px">
-    <col style="width:210px"><col style="width:115px"><col style="width:72px">
-    <col style="width:68px"><col style="width:95px"><col style="width:92px">
-    <col style="width:92px"><col style="width:52px">
-  </colgroup><thead><tr>
+  <div class="tw"><table><thead><tr>
     <th class="sortable" onclick="sortTable('normal','date')">날짜</th>
     <th>판매처</th><th>브랜드</th><th>제품명</th><th>UPC</th>
     <th class="sortable" onclick="sortTable('normal','remaining')">재고/전체</th>
@@ -380,12 +364,7 @@ tr.deleted .badge{opacity:.5}
     <button class="btn" onclick="exportDisposed()">엑셀 다운</button>
     <span class="mla" id="d-sum" style="font-size:11px;color:var(--tx3)"></span>
   </div>
-  <div class="tw"><table><colgroup>
-    <col style="width:92px"><col style="width:115px"><col style="width:82px">
-    <col style="width:210px"><col style="width:115px"><col style="width:52px">
-    <col style="width:68px"><col style="width:95px"><col style="width:92px">
-    <col style="width:95px">
-  </colgroup><thead><tr>
+  <div class="tw"><table><thead><tr>
     <th class="sortable" onclick="sortTable('disposed','date')">날짜</th>
     <th>판매처</th><th>브랜드</th><th>제품명</th><th>UPC</th>
     <th class="sortable" onclick="sortTable('disposed','qty')">수량</th>
@@ -922,7 +901,6 @@ function renderRecent(){
       '<td style="font-size:10px;color:var(--tx3)">'+(r.upc||'—')+'</td><td>'+r.qty+'</td>'+
       '<td>$'+(r.price||0).toFixed(2)+'</td><td>$'+((r.qty||0)*(r.price||0)).toFixed(2)+'</td>'+
       '<td>'+fmtDateDisp(r.expiry)+'</td><td>'+(r.cat||'—')+'</td>'+
-      '<td style="font-size:10px;color:var(--tx2)">'+(r.reason||'')+'</td>'+
       '<td><span class="badge '+(r.status==='정상'?'bok':'bad')+'">'+r.status+'</span></td></tr>';
   }).join('');
 }
@@ -1438,7 +1416,7 @@ function openUPCDetail(upc){
   // 유통기한별 재고
   html += '<div class="ct" style="margin-bottom:8px">유통기한별 재고 현황</div>';
   if(batches.length){
-    html += '<div class="tw" style="margin-bottom:14px"><table><colgroup><col style="width:100px"><col style="width:80px"><col style="width:80px"><col style="width:80px"><col style="width:80px"><col style="width:90px"></colgroup>';
+    html += '<div class="tw" style="margin-bottom:14px"><table>';
     html += '<thead><tr><th>유통기한</th><th>잔여수량</th><th>입고수량</th><th>단가</th><th>재고금액</th><th>남은일수</th></tr></thead><tbody>';
     batches.forEach(function(r){
       var d = r.expiry ? Math.round((new Date(r.expiry) - today) / 86400000) : null;
@@ -1456,7 +1434,7 @@ function openUPCDetail(upc){
     var totalDisp = disposed.reduce(function(s,r){return s+r.qty;},0);
     var lossAmt = disposed.reduce(function(s,r){return s+r.qty*(r.price||0);},0);
     html += '<div class="ct" style="margin-bottom:8px;margin-top:4px">폐기 내역</div>';
-    html += '<div class="tw" style="margin-bottom:14px"><table><colgroup><col style="width:100px"><col style="width:80px"><col style="width:100px"><col style="width:90px"></colgroup>';
+    html += '<div class="tw" style="margin-bottom:14px"><table>';
     html += '<thead><tr><th>날짜</th><th>수량</th><th>대분류</th><th>손실금액</th></tr></thead><tbody>';
     disposed.forEach(function(r){
       html += '<tr><td>'+fmtDateDisp(r.date)+'</td><td>'+r.qty+'개</td><td>'+(r.cat||'—')+'</td><td style="color:var(--r)">$'+(r.qty*(r.price||0)).toFixed(2)+'</td></tr>';
@@ -1470,7 +1448,7 @@ function openUPCDetail(upc){
     var totalUsed = used.reduce(function(s,h){return s+h.qty;},0);
     var usedAmt = used.reduce(function(s,h){return s+h.qty*(h.price||0);},0);
     html += '<div class="ct" style="margin-bottom:8px;margin-top:4px">사용 이력</div>';
-    html += '<div class="tw"><table><colgroup><col style="width:100px"><col style="width:80px"><col style="width:90px"><col style="width:90px"><col style="width:90px"></colgroup>';
+    html += '<div class="tw"><table>';
     html += '<thead><tr><th>사용일자</th><th>수량</th><th>사용처</th><th>유통기한</th><th>사용비용</th></tr></thead><tbody>';
     [].concat(used).reverse().forEach(function(h){
       html += '<tr><td>'+fmtDateDisp(h.date)+'</td><td>'+h.qty+'개</td><td>'+useBadge(h.type)+'</td><td>'+(h.expiry?fmtDateDisp(h.expiry):'—')+'</td><td>$'+((h.qty||0)*(h.price||0)).toFixed(2)+'</td></tr>';
