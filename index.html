@@ -156,6 +156,11 @@ tr.deleted .badge{opacity:.5}
     <span class="rate-val" id="rate-display">로딩중...</span>
     <span id="rate-time" style="margin-left:auto;font-size:9px"></span>
   </div>
+  <div style="padding:8px 12px;border-top:.5px solid var(--bd);background:var(--bg2);display:flex;align-items:center;gap:6px">
+    <div style="width:7px;height:7px;border-radius:50%;background:var(--g);flex-shrink:0" id="gs-dot"></div>
+    <span id="gs-status" style="font-size:10px;color:var(--tx3);flex:1">Google Sheets 연결중...</span>
+    <button onclick="gsLoad()" style="font-size:9px;padding:2px 7px;border:.5px solid var(--bd2);border-radius:3px;background:var(--bg);cursor:pointer;color:var(--tx2)">새로고침</button>
+  </div>
 </nav>
 <main class="main">
 
@@ -603,7 +608,7 @@ var IB=[],HB=[],PB=[];
 // sort state per table
 var SORT={recent:{k:'date',d:-1},ar:{k:'date',d:-1},normal:{k:'date',d:-1},disposed:{k:'date',d:-1},hist:{k:'date',d:-1},sum:{k:'stockAmt',d:-1}};
 
-function save(){localStorage.setItem('ris_rec',JSON.stringify(REC));localStorage.setItem('ris_hist',JSON.stringify(HIST));}
+function save(){localStorage.setItem('ris_rec',JSON.stringify(REC));localStorage.setItem('ris_hist',JSON.stringify(HIST));gsSave();}
 function savePDB(){localStorage.setItem('ris_pdb',JSON.stringify(PDB));}
 function toast(m,e){var t=document.getElementById('toast');t.textContent=m;t.className='toast'+(e?' err':'');t.classList.add('show');setTimeout(function(){t.classList.remove('show');},2800);}
 
@@ -1449,6 +1454,58 @@ function openUPCDetail(upc){
 function closeUPCDetail(){ document.getElementById('modal-upc').style.display = 'none'; }
 
 
+
+// ── GOOGLE SHEETS SYNC ───────────────────────────────────────────────
+var GS_URL = 'https://script.google.com/macros/s/AKfycbxf5bERx9za-I5AbmghJV7zsht5a6JFic9tgKCq-a0r4tcD5wrtAn4A3FT9YOHo958/exec';
+var GS_ENABLED = true;
+var GS_SAVING = false;
+
+function gsSave(){
+  if(!GS_ENABLED || GS_SAVING) return;
+  GS_SAVING = true;
+  fetch(GS_URL, {
+    method: 'POST',
+    body: JSON.stringify({type:'save', records:REC, history:HIST})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    GS_SAVING = false;
+    if(d.ok){
+      var el=document.getElementById('gs-status');
+      if(el){el.textContent='저장됨 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});el.style.color='var(--g)';}
+    }
+  })
+  .catch(function(e){
+    GS_SAVING = false;
+    var el=document.getElementById('gs-status');
+    if(el){el.textContent='저장 실패';el.style.color='var(--r)';}
+  });
+}
+
+function gsLoad(){
+  var el=document.getElementById('gs-status');
+  if(el){el.textContent='불러오는 중...';el.style.color='var(--a)';}
+  fetch(GS_URL, {
+    method: 'POST',
+    body: JSON.stringify({type:'load'})
+  })
+  .then(function(r){return r.json();})
+  .then(function(d){
+    if(d.ok && d.records){
+      REC.length=0; d.records.forEach(function(r){REC.push(r);});
+      HIST.length=0; d.history.forEach(function(h){HIST.push(h);});
+      save();
+      renderDash(); renderDBStatus();
+      if(el){el.textContent='최신 데이터 로드됨 '+new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});el.style.color='var(--g)';}
+      toast('✅ Google Sheets에서 최신 데이터 로드 완료!');
+    }
+  })
+  .catch(function(e){
+    if(el){el.textContent='연결 실패';el.style.color='var(--r)';}
+    toast('Google Sheets 연결 실패 — 로컬 데이터 사용중', true);
+  });
+}
+
 // ── BACKUP & RESTORE ──────────────────────────────────────────────────
 function exportBackup(){
   var backup = {
@@ -1527,7 +1584,7 @@ function resetAll(){
 // ── INIT ──────────────────────────────────────────────────────────────
 document.getElementById('in-date').value=new Date().toISOString().slice(0,10);
 fetchRate();
-renderDash();
+gsLoad();
 
 </script>
 </body>
