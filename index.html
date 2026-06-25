@@ -1113,7 +1113,10 @@ function parseFile(file,cb){
 }
 function fmtD(v){
   if(!v)return'';
-  if(v instanceof Date){return v.getFullYear()+'-'+String(v.getMonth()+1).padStart(2,'0')+'-'+String(v.getDate()).padStart(2,'0');}
+  if(v instanceof Date){
+    // XLSX cellDates=true는 UTC로 저장되므로 UTC 기준으로 읽기
+    return v.getUTCFullYear()+'-'+String(v.getUTCMonth()+1).padStart(2,'0')+'-'+String(v.getUTCDate()).padStart(2,'0');
+  }
   var s=String(v).trim();
   if(s.indexOf('T')>=0||s.indexOf(' 00:00')>=0)s=s.slice(0,10);
   if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
