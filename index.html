@@ -1122,10 +1122,7 @@ function previewHistReplace(){
 }
 function doHistReplace(){
   if(!HRB.length){toast('파일을 먼저 선택하세요.',true);return;}
-  if(!confirm('기존 사용이력 '+HIST.length+'건을 모두 삭제하고
-새 파일 '+HRB.length+'행으로 교체합니다.
-
-계속할까요?'))return;
+  if(!confirm('기존 사용이력 '+HIST.length+'건을 모두 삭제하고 새 파일 '+HRB.length+'행으로 교체합니다. 계속할까요?'))return;
 
   var HCOL2={'사용일자':'date','날짜':'date','사용처':'type','유형':'type',
     '제품명':'name','Item Name':'name','UPC':'upc','upc':'upc',
@@ -1142,22 +1139,8 @@ function doHistReplace(){
     var qty=parseInt(m.qty)||0;
     if(!qty&&!m.name)return;
 
-    // 날짜 파싱 - 다양한 형식 처리
-    var dateStr=m.date||'';
-    // "3/27/2025" → "2025-03-27"
-    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateStr)){
-      var p=dateStr.split('/');
-      dateStr=p[2]+'-'+p[0].padStart(2,'0')+'-'+p[1].padStart(2,'0');
-    }
-    // yyyy-mm-dd 그대로
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) dateStr=fmtD(m.date)||new Date().toISOString().slice(0,10);
-
-    var expiryStr=m.expiry||'';
-    if(/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(expiryStr)){
-      var p=expiryStr.split('/');
-      expiryStr=p[2]+'-'+p[0].padStart(2,'0')+'-'+p[1].padStart(2,'0');
-    }
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(expiryStr)) expiryStr=fmtD(m.expiry)||'';
+    var dateStr=fmtD(m.date)||new Date().toISOString().slice(0,10);
+    var expiryStr=fmtD(m.expiry)||'';
 
     newHist.push({
       date:dateStr, type:m.type||'사용', upc:m.upc||'',
