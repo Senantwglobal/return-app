@@ -1106,7 +1106,7 @@ function parseFile(file,cb){
       var lines=e.target.result.replace(/\r/g,'').split('\n');
       var hdr=lines[0].split(',').map(function(h){return h.trim().replace(/^"|"$/g,'');});
       data=[];for(var i=1;i<lines.length;i++){if(!lines[i].trim())continue;var cols=lines[i].split(',').map(function(c){return c.trim().replace(/^"|"$/g,'');});var o={};hdr.forEach(function(h,j){o[h]=cols[j]||'';});data.push(o);}
-    }else{var wb=XLSX.read(e.target.result,{type:'array',cellDates:true});data=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});}
+    }else{var wb=XLSX.read(e.target.result,{type:'array'});data=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:'',raw:false});}
     cb(data);
   };
   if(file.name.toLowerCase().slice(-4)==='.csv')reader.readAsText(file,'utf-8');else reader.readAsArrayBuffer(file);
@@ -1121,6 +1121,14 @@ function fmtD(v){
   if(s.indexOf('T')>=0||s.indexOf(' 00:00')>=0)s=s.slice(0,10);
   if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
   if(/^\d{4}-\d{2}$/.test(s))return s+'-01';
+  // m/d/yyyy 또는 m/d/yy 형식 (XLSX raw:false가 반환하는 형식)
+  if(/^\d{1,2}\/\d{1,2}\/\d{2,4}$/.test(s)){
+    var parts=s.split('/');
+    var y=parseInt(parts[2]);if(y<100)y+=2000;
+    return y+'-'+String(parseInt(parts[0])).padStart(2,'0')+'-'+String(parseInt(parts[1])).padStart(2,'0');
+  }
+  // yyyy/mm/dd 형식
+  if(/^\d{4}\/\d{2}\/\d{2}$/.test(s)){return s.replace(/\//g,'-');}
   if(/[A-Za-z]/.test(s)){var d=new Date(s);if(!isNaN(d.getTime()))return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
   if(/^\d+$/.test(s)){var serial=parseInt(s);if(serial>40000&&serial<60000){var epoch=new Date(1899,11,30);epoch.setDate(epoch.getDate()+serial);return epoch.getFullYear()+'-'+String(epoch.getMonth()+1).padStart(2,'0')+'-'+String(epoch.getDate()).padStart(2,'0');}}
   return s.slice(0,10)||'';
