@@ -172,7 +172,7 @@ tr.deleted .badge{opacity:.5}
       <select id="f-ch" onchange="renderDash()">
         <option value="">전체</option><option>오플닷컴</option><option>네이버(올댓몰)</option>
         <option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option>
-        <option>이베이(올댓몰)</option><option>사무실 재고 조사</option><option>미확인</option>
+        <option>이베이(올댓몰)</option><option>11번가</option><option>사무실 재고 조사</option><option>미확인</option>
       </select></div>
     <div class="fsep"></div>
     <div class="fgrp"><label>기간</label>
@@ -220,7 +220,7 @@ tr.deleted .badge{opacity:.5}
     <div class="r3">
       <div class="fi"><label>반품 확인일 <span class="req">*</span></label><input type="date" id="in-date"></div>
       <div class="fi"><label>판매처 <span class="req">*</span></label>
-        <select id="in-ch" onchange="onChannelChange()"><option value="">선택</option><option>오플닷컴</option><option>네이버(올댓몰)</option><option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option><option>이베이(올댓몰)</option><option>사무실 재고 조사</option></select></div>
+        <select id="in-ch" onchange="onChannelChange()"><option value="">선택</option><option>오플닷컴</option><option>네이버(올댓몰)</option><option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option><option>이베이(올댓몰)</option><option>사무실 재고 조사</option><option>11번가</option></select></div>
       <div class="fi"><label>주문번호 <span class="req" id="ord-req">*</span></label><input id="in-ord" placeholder="예: 2511240090"></div>
     </div>
     <div class="r2" id="shipping-row">
@@ -280,7 +280,7 @@ tr.deleted .badge{opacity:.5}
   <div class="ph"><div class="ph-t">전체 입고 이력</div><div class="ph-s">삭제된 항목은 취소선으로 표시됩니다</div></div>
   <div class="tb">
     <input id="ar-s" placeholder="제품명 또는 UPC 검색..." oninput="renderAR()">
-    <select id="ar-ch" onchange="renderAR()"><option value="">전체 채널</option><option>오플닷컴</option><option>네이버(올댓몰)</option><option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option><option>이베이(올댓몰)</option><option>사무실 재고 조사</option></select>
+    <select id="ar-ch" onchange="renderAR()"><option value="">전체 채널</option><option>오플닷컴</option><option>네이버(올댓몰)</option><option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option><option>이베이(올댓몰)</option><option>11번가</option><option>사무실 재고 조사</option></select>
     <select id="ar-st" onchange="renderAR()"><option value="">전체</option><option value="정상">정상</option><option value="폐기">폐기</option></select>
     <select id="ar-cat" onchange="renderAR()"><option value="">전체 대분류</option><option>오배송</option><option>취소/변심</option><option>취소 누락</option><option>유통기한</option><option>파손/불량</option><option>과배송/중복</option><option>배송지연</option><option>배송누락/회수오류</option><option>패키지/제품정보 상이</option><option>미확인</option><option>기타</option></select>
     <select id="ar-show" onchange="renderAR()"><option value="active">유효 항목</option><option value="deleted">삭제된 항목</option><option value="all">전체 보기</option></select>
@@ -305,7 +305,7 @@ tr.deleted .badge{opacity:.5}
   <div class="ph"><div class="ph-t">정상 재고</div><div class="ph-s">재발송 · 프로모션 등으로 활용 가능한 재고</div></div>
   <div class="tb">
     <input id="n-s" placeholder="제품명 또는 UPC 검색..." oninput="renderNormal()">
-    <select id="n-ch" onchange="renderNormal()"><option value="">전체 채널</option><option>오플닷컴</option><option>네이버(올댓몰)</option><option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option><option>이베이(올댓몰)</option><option>사무실 재고 조사</option></select>
+    <select id="n-ch" onchange="renderNormal()"><option value="">전체 채널</option><option>오플닷컴</option><option>네이버(올댓몰)</option><option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option><option>이베이(올댓몰)</option><option>11번가</option><option>사무실 재고 조사</option></select>
     <button class="btn bp" onclick="openUseModal()">사용 / 출고</button>
     <button class="btn" onclick="exportNormal()">엑셀 다운</button>
     <button class="btn bs" onclick="resetNormal()">초기화</button>
@@ -326,7 +326,7 @@ tr.deleted .badge{opacity:.5}
   <div class="ph"><div class="ph-t">폐기 재고</div><div class="ph-s">손실 처리된 제품 목록</div></div>
   <div class="tb">
     <input id="d-s" placeholder="제품명 또는 UPC 검색..." oninput="renderDisposed()">
-    <select id="d-ch" onchange="renderDisposed()"><option value="">전체 채널</option><option>오플닷컴</option><option>네이버(올댓몰)</option><option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option><option>이베이(올댓몰)</option><option>사무실 재고 조사</option></select>
+    <select id="d-ch" onchange="renderDisposed()"><option value="">전체 채널</option><option>오플닷컴</option><option>네이버(올댓몰)</option><option>네이버(비타코어)</option><option>쿠팡</option><option>이베이(패스트오플)</option><option>이베이(올댓몰)</option><option>11번가</option><option>사무실 재고 조사</option></select>
     <button class="btn" onclick="exportDisposed()">엑셀 다운</button>
     <button class="btn bs" onclick="resetDisposed()">초기화</button>
     <span class="mla" id="d-sum" style="font-size:11px;color:var(--tx3)"></span>
@@ -356,7 +356,7 @@ tr.deleted .badge{opacity:.5}
     <th>사용처</th><th>브랜드</th><th>제품명</th><th>UPC</th><th>유통기한</th>
     <th class="sortable" onclick="sortTable('hist','qty')">수량</th>
     <th class="sortable" onclick="sortTable('hist','price')">단가</th>
-    <th class="sortable" onclick="sortTable('hist','cost')">사용비용</th>
+    <th class="sortable" onclick="sortTable('hist','cost')">사용비용</th><th>메모</th>
   </tr></thead><tbody id="hist-body"></tbody></table></div>
 </div>
 
@@ -493,6 +493,7 @@ tr.deleted .badge{opacity:.5}
       <div class="fi"><label>단가 (USD)</label><div class="ro" id="use-price">—</div></div>
       <div class="fi"><label>사용비용</label><div class="total" id="use-cost">$0.00</div></div>
     </div>
+    <div class="fi mb8"><label>메모 / 상세사유</label><input id="use-memo" placeholder="선택 입력"></div>
     <div class="mdf">
       <button class="btn" onclick="closeUse()">취소</button>
       <button class="btn bp" onclick="recordUse()">사용 등록</button>
@@ -659,6 +660,7 @@ function chBadge(ch){
   else if(c.indexOf('네이버')>=0)sty+='background:#E8F5E9;color:#1B6B2E;border:.5px solid #66BB6A;';
   else if(c.indexOf('쿠팡')>=0)sty+='background:#FDE8E8;color:#B71C1C;border:.5px solid #EF9A9A;';
   else if(c.indexOf('이베이')>=0)sty+='background:#E3F0FB;color:#0D47A1;border:.5px solid #90CAF9;';
+  else if(c.indexOf('11번가')>=0)sty+='background:#FFF3E0;color:#E65100;border:.5px solid #FFCC02;';
   else if(c.indexOf('사무실')>=0)sty+='background:#E0F2F1;color:#00695C;border:.5px solid #80CBC4;';
   else sty+='background:var(--bg2);color:var(--tx2);border:.5px solid var(--bd);';
   return'<span style="'+sty+'">'+c+'</span>';
@@ -933,6 +935,7 @@ function openUseModal(){
   document.getElementById('use-price').textContent='—';
   document.getElementById('use-cost').textContent='$0.00';
   document.getElementById('use-info').textContent='제품을 선택하세요';
+  var useMemoEl=document.getElementById('use-memo');if(useMemoEl)useMemoEl.value='';
   filterUseList();
   document.getElementById('modal-use').style.display='block';
 }
@@ -960,7 +963,8 @@ function recordUse(){
   if(qty>r.remaining){toast('재고 초과 (최대 '+r.remaining+'개)',true);return;}
   var type=document.getElementById('use-type').value,date=document.getElementById('use-date').value||new Date().toISOString().slice(0,10);
   r.remaining-=qty;if(r.remaining===0)r.status=type==='폐기'?'폐기':'소진';
-  HIST.push({date:date,type:type,upc:r.upc,expiry:r.expiry||'',brand:r.brand||'',name:r.name,qty:qty,price:r.price||0});
+  var memo=document.getElementById('use-memo').value||'';
+  HIST.push({date:date,type:type,upc:r.upc,expiry:r.expiry||'',brand:r.brand||'',name:r.name,qty:qty,price:r.price||0,memo:memo});
   save();closeUse();renderNormal();renderDash();toast('사용 등록 완료!');
 }
 
@@ -979,7 +983,8 @@ function renderHistory(){
       '<td style="font-size:10px;color:var(--tx3)">'+(h.upc||'—')+'</td>'+
       '<td style="font-size:10px;color:var(--tx2)">'+(h.expiry?fmtDateDisp(h.expiry):'—')+'</td>'+
       '<td>'+h.qty+'개</td><td>$'+(h.price||0).toFixed(2)+'</td>'+
-      '<td style="font-weight:600">$'+((h.qty||0)*(h.price||0)).toFixed(2)+'</td></tr>';
+      '<td style="font-weight:600">$'+((h.qty||0)*(h.price||0)).toFixed(2)+'</td>'+
+      '<td style="font-size:10px;color:var(--tx2)">'+(h.memo||'')+'</td></tr>';
   }).join(''):'<tr><td colspan="9" class="empty">이력 없음</td></tr>';
 }
 function resetHistory(){document.getElementById('h-type').value='';document.getElementById('h-s').value='';renderHistory();}
